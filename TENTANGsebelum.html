@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Aksi Kita</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<style>
+    /* RESET DASAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f8f8f8; /* Warna latar belakang umum */
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    /* Removed padding-top here as it's now an inline style on .about-aksi-kita for specific control */
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: 700;
+    color: #333;
+}
+
+
+.navbar {
+    background: #1e3d8f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Logo dan Menu di kiri */
+    padding: 13px 55px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    gap: 50px; /* Jarak antara Logo dan Menu */
+}
+
+.logo img {
+    height: 55px;
+}
+
+.navlinks a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 5px 0;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.navlinks a.active {
+    text-decoration: underline;
+}
+
+.nav-auth {
+  display: flex;
+  align-items: center;
+  transform: translate(255%, -1%)scale(100%);
+  gap: 20px;
+}
+
+.btn-outline {
+  padding: 6px 30px;
+  border: 2px solid white;
+  border-radius: 30px;
+  background: transparent;
+  color: white;
+  font-weight: 550;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: #244a9a;
+}
+
+/* ================================== */
+/* STYLING TENTANG AKSI KITA */
+/* ================================== */
+.about-aksi-kita {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 50px 0;
+    margin-bottom: 40px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 10px 0 0 10px;
+}
+
+.content-left img {
+    max-width: 80%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.content-right {
+    flex: 1.5;
+    padding-right: 40px;
+}
+
+.content-right .section-title {
+    text-align: left;
+    margin-top: 0;
+    font-size: 1.8em;
+    color: #000080;
+}
+
+.content-right p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+/* FRAME VIDEO */
+.intro-video-frame {
+    width: 800px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 20px auto;
+   
+}
+
+.intro-video-frame video {
+    width: 100%;
+    display: block;
+    border-radius: 15px;
+    
+}
+
+/* TITLE + DESCRIPTION */
+.intro-title {
+    text-align: left;
+    color: #000080;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+.intro-desc {
+    text-align: left;
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+    margin-top: 15px;
+}
+
+/* ================================== */
+/* STYLING TENTANG KAMI (TIM) - FINAL FIXED */
+/* ================================== */
+.about-us .section-title {
+    color: #000080;
+    margin-bottom: 40px;
+    font-size: 1.8em;
+}
+
+.team-cards-container {
+    display: flex;
+    justify-content: center; /* Ubah ke center agar seimbang jika jumlah ganjil */
+    flex-wrap: wrap; 
+    gap: 20px;
+    /* align-items: stretch; secara default sudah aktif, membuat semua kartu sama tinggi */
+}
+
+.team-member-card {
+    background-color: white;
+    padding: 20px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+    /* PERBAIKAN UTAMA: Gunakan Flex Column untuk layout kartu */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; /* Pastikan semua isi rata tengah */
+    
+    width: 18%; 
+    min-width: 200px; /* Sedikit diperlebar agar teks tidak terlalu terhimpit */
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-photo-real {
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin: 0 auto 15px; 
+    border: 3px solid #1e3d8f; 
+}
+
+.team-member-card h3 {
+    font-size: 1em;
+    font-weight: 600;
+    color: #000080;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;      
+    width: 100%;             
+    min-height: 45px;        
+    display: flex;           
+    align-items: center;     
+    justify-content: center;
+}
+
+.team-member-card .nim {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* KOTAK BIRU (ROLE) YANG DIPERBAIKI */
+.team-member-card .role {
+    font-size: 0.75em;
+    color: #000000;
+    background-color: #ADD8E6; 
+    padding: 10px; /* Padding sedikit ditambah */
+    border-radius: 5px;
+    
+    /* PERBAIKAN: Agar kotak biru menempel di bawah dan ukurannya rata */
+    width: 100%;          /* Lebar penuh */
+    margin-top: auto;     /* Dorong kotak ke paling bawah kartu */
+    min-height: 60px;     /* Paksa tinggi minimal agar semua kotak sama besar */
+    
+    /* Gunakan Flexbox HANYA DI DALAM kotak ini untuk menengahkan teks */
+    display: flex;
+    align-items: center;     /* Tengah vertikal */
+    justify-content: center; /* Tengah horizontal */
+    text-align: center;
+}
+
+
+/* ================== FOOTER ================== */
+.main-footer {
+    background: linear-gradient(165deg, #080e18 0%, #102647 70%, #9c7719 120%);
+    color: #fff;
+    padding: 60px 70px;
+    font-family: Arial, sans-serif;
+}
+
+/* Header logo + nama */
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.footer-logo {
+  width: 75px;
+  height: 55px;
+  object-fit: cover;
+}
+
+/* Konten kolom */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 45px;
+  gap: 20px;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-col p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 15px;
+}
+
+.footer-col a {
+  display: block;
+  margin: 6px 0;
+  color: #eee;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.footer-col a:hover {
+  color: #0077ff;
+}
+
+/* Ikon sosial */
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  background: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.footer-social a:hover {
+  transform: translateY(-5px);
+}
+
+/* Copyright */
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 10px;
+}
+
+
+@media (max-width: 800px) {
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-top {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.footer {
+    background: rgba(0, 0, 0, 0.674);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 80px;
+    font-size: 14px;
+    }
+
+    .footer-container p {
+    margin: 0;
+    opacity: 0.9;
+    }
+
+   
+</style>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="ASSETS/LOGO.png" alt="Logo Aksi Kita">
+        </div>
+
+        <nav class="navlinks">
+            <a href="BERANDA1.html">Beranda</a>
+            <a href="LAPORANsebelum.html">Laporan</a>
+            <a href="PERINGKATsebelum.html">Peringkat</a>
+            <a href="TENTANGsebelum.html" class="active">Tentang</a>
+        </nav>
+        <div class="nav-auth">
+      <button onclick="window.location.href='DAFTAR.html'" class="btn-outline">Daftar</button>
+      <button onclick="window.location.href='MASUK.html'" class="btn-outline">Masuk</button>
+    </div>
+      
+    </header>
+    
+    <main class="container">
+        <section class="about-aksi-kita" style="padding-top: 100px;"> 
+            <div class="content-left">
+                <img src="ASSETS/kolase.png" alt="Gambar Kolaborasi Aksi Kita">
+            </div>
+            <div class="content-right">
+                <h1 class="section-title" style="font-family: 'poppins';">Tentang Aksi Kita</h1>
+                <p>Aksi Kita adalah platform pelaporan digital yang memberdayakan masyarakat untuk berpartisipasi aktif dalam menjaga kualitas fasilitas umum di seluruh Indonesia.</p>
+                <p>Website ini memungkinkan Anda melaporkan kerusakan dengan bukti visual (foto/video) secara cepat dan akurat. Laporan dapat berupa kerusakan di lingkungan sekitar Anda atau di seluruh penjuru Indonesia.</p>
+                <p>Keunikan Aksi Kita terletak pada sistem Penilaian Publik yang transparan. Setelah perbaikan dilakukan, masyarakat dapat memberikan rating berdasarkan kecepatan penanganan dan kualitas perbaikan oleh pemerintah. Sistem ini menciptakan akuntabilitas dan mendorong pihak berwenang untuk bertindak cepat dan efektif.</p>
+                <p>Aksi Kita adalah wadah kolaborasi untuk perubahan. Mari bersama-sama pastikan fasilitas publik terawat optimal.</p>
+            </div>
+        </section>
+
+        <section class="intro-video" style="margin-top:80px; margin-bottom:60px;">
+    <h2 class="intro-title">Satu Aplikasi untuk Semua Laporan Warga</h2>
+
+    <div class="intro-video-frame">
+        <video controls>
+            <source src="ASSETS/Video.mp4" type="video/mp4">
+            Browser Anda tidak mendukung video.
+        </video>
+    </div>
+
+    <p class="intro-desc">
+        “Melalui Aksi Kita, setiap laporan warga bisa ditangani lebih cepat dan tepat. Video ini menunjukkan bagaimana aplikasi membantu meningkatkan kualitas lingkungan kita.”
+      </p>
+</section>
+
+        <section class="about-us">
+            <h2 class="section-title">Tim Kreator Aksi Kita</h2>
+            <div class="team-cards-container">
+
+                <div class="team-member-card">
+                    <img src="ASSETS/vaidon.jpeg" alt="Foto Vaidon" class="profile-photo-real">
+                    <h3>Vaidon Shello Sinambela</h3>
+                    <p class="nim">NIM: 241712052</p>
+                    <p class="role">Laporan, Tentang, Informasi Penting</p>
+                </div>
+
+                <div class="team-member-card">
+                    <img src="ASSETS/alma.jpeg" alt="Foto Alma" class="profile-photo-real">
+                    <h3>Alma Murael Gultom</h3>
+                    <p class="nim">NIM: 241712049</p>
+                    <p class="role">Login, Register, Popup</p>
+                </div>
+
+                <div class="team-member-card">
+                    <img src="ASSETS/adelia2.JPG" alt="Foto Adelia" class="profile-photo-real">
+                    <h3>Adelia Deswita Simbolon</h3>
+                    <p class="nim">NIM: 241712066</p>
+                    <p class="role">Pop Up Seting dan Laporan</p>
+                </div>
+
+                <div class="team-member-card">
+                    <img src="ASSETS/fryana.jpeg" alt="Foto Fryana" class="profile-photo-real">
+                    <h3>Fryana Gultom</h3>
+                    <p class="nim">NIM: 241712054</p>
+                    <p class="role">Beranda1, Beranda2, Popup Profile</p>
+                </div>
+                
+                <div class="team-member-card">
+                    <img src="ASSETS/andri.jpeg" alt="Foto Andri" class="profile-photo-real">
+                    <h3>Andri Wiguna</h3>
+                    <p class="nim">NIM: 241712062</p>
+                    <p class="role">Peringkat, Laporan Populer, Statistik Laporan</p>
+                </div>
+                
+            </div>
+        </section>
+    </main>
+
+    
+
+
+<footer class="main-footer">
+        <div class="footer-top">
+            <img src="ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
+            <h3>Aksi Kita</h3>
+        </div>
+      
+        <div class="footer-content">
+            <div class="footer-col">
+                <p>Jl. Bachireng No. 12, Indonesia</p>
+                <p>0821 6888 9060</p>
+                <p>info@aksikita.id</p>
+            </div>
+            <div class="footer-col">
+                <a href="#">Unit Layanan Terpadu</a>
+                <a href="#">Cara Kerja</a>
+                <a href="#">FAQ</a>
+                <a href="#">Aturan Penggunaan</a>
+            </div>
+            <div class="footer-col">
+                <a href="#">Lapor</a>
+                <a href="#">Survei</a>
+                <a href="#">Peta Situs</a>
+                <a href="#">Arsip</a>
+            </div>
+        </div>
+      
+        <div class="footer-social">
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+      
+        <div class="footer-bottom">
+            © 2025 AksiKita. Semua Hak Dilindungi.
+        </div>
+    </footer>
+</body>
+</html>
