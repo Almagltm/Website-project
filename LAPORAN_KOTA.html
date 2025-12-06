@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan Kota - Aksi Kita</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<style>
+    /* ========================================================================= */
+/* 1. GLOBAL STYLES & LAYOUT */
+/* ========================================================================= */
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background:linear-gradient(#ffffff, #d2f6ff);
+}
+
+.laporan-page {
+    max-width: 950px;
+    /* Konsisten: Margin 120px untuk mengimbangi fixed navbar */
+    margin: 120px auto 50px; 
+    padding: 0 20px;
+}
+
+.page-title {
+    display: none;
+}
+
+/* ========================================================================= */
+/* 2. NAVBAR (Dibuat FIXED) */
+/* ========================================================================= */
+.navbar {
+    background: #1e3d8f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Logo dan Menu di kiri */
+    padding: 13px 55px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    gap: 50px; /* Jarak antara Logo dan Menu */
+}
+
+.logo img {
+    height: 55px;
+}
+
+.navlinks a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 5px 0;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.navlinks a.active {
+    text-decoration: underline;
+}
+
+.user {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .username {
+      display: inline-block;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* HIDE CHECKBOX */
+    #toggleProfile,
+    #toggleLogout,
+    #toggleSetting {
+      display: none;
+    }
+
+    .popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #toggleProfile:checked ~ #profilePopup { display: flex; }
+    #toggleLogout:checked ~ #logoutPopup { display: flex; }
+
+    .popup-content {
+      background: rgba(65, 65, 65, 0.8);
+      border-radius: 15px;
+      padding: 25px;
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transform: translate(190%, -70%);
+    }
+
+    .popup-content button,
+    .popup-content label {
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 12px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      color: white;
+      font-size: 15px;
+    }
+
+    .popup-content button:hover,
+    .popup-content label:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .popup-box {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .popup-actions {
+      margin-top: 20px;
+    }
+
+    .popup-actions button,
+    .popup-actions label {
+      margin: 0 10px;
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #confirmLogout {
+      background: #e63946;
+      color: white;
+    }
+
+    #cancelLogout {
+      background: #ccc;
+    }
+
+    
+    /* POPUP PENGATURAN */
+    .overlay-setting {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      visibility: hidden;
+      opacity: 0;
+      transition: .3s;
+      z-index: 99999;
+    }
+
+    #toggleSetting:checked ~ #settingPopup {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .overlay-bg {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    .setting-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 330px;
+      background: white;
+      transform: translate(-50%, -50%) scale(0.8);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: .3s;
+    }
+
+    #toggleSetting:checked ~ #settingPopup .setting-box {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .setting-box .title { font-size: 24px; margin-bottom: 20px; display: flex; gap: 8px; align-items: center; }
+    .section { margin-bottom: 18px; }
+    .section-title { font-weight: bold; font-size: 14px; margin-bottom: 6px; }
+    .menu-item { display: block; padding: 7px 0; text-decoration: none; color: #333; font-size: 15px; cursor: pointer;}
+    .menu-item:hover { color: #0077ff; }
+    .exit { font-weight: bold; margin-top: 10px; transform: translate(40%, 0%);}
+
+    /* AUTO CLOSE POPUP */
+    #toggleSetting:checked ~ #profilePopup { display: none !important; }
+    #toggleSetting:checked ~ #logoutPopup { display: none !important; }
+
+    #toggleProfile:checked ~ #settingPopup { visibility: hidden !important; opacity: 0 !important; }
+    #toggleProfile:checked ~ #logoutPopup { display: none !important; }
+
+    #toggleLogout:checked ~ #profilePopup { display: none !important; }
+    #toggleLogout:checked ~ #settingPopup { visibility: hidden !important; opacity: 0 !important; }
+
+
+
+/* ========================================================================= */
+/* 3. LAPORAN FILTER STYLES (Penyesuaian Active State) */
+/* ========================================================================= */
+
+.laporan-filter {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    background: rgb(245, 235, 213); 
+    padding: 10px; 
+    border-radius: 40px; 
+    border: 1.5px solid #1e3d8f;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+    margin-bottom: 40px;
+}
+
+.filter-btn {
+    display: inline-block; 
+    text-decoration: none; 
+    text-align: center;
+    white-space: nowrap;
+    
+    padding: 8px 30px; 
+    font-size: 16px;
+    border-radius: 40px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    
+    /* Style Default (Krem) */
+    color: #4a4a4a; 
+    background: #ddcba2; 
+}
+
+/* Tombol AKTIF (Hanya Kota Saya) */
+.filter-btn.active {
+    background: #1e3d8f; /* Biru Tua */
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
+
+/* ========================================================================= */
+/* 4. LAPORAN CARDS (Layout 3 Kolom & Gambar Potret) */
+/* ========================================================================= */
+
+.laporan-list {
+    display: flex;
+    justify-content:flex-start; 
+    gap: 25px; 
+    flex-wrap: wrap; 
+}
+
+.laporan-card {
+    width: 300px; 
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding-bottom: 10px;
+}
+
+.laporan-header {
+    position: relative;
+    height: 180px; 
+    overflow: hidden;
+}
+
+.laporan-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* <-- INI yang membuat rapi */
+    border-radius: 12px 12px 0 0;
+    display: block;
+}
+
+
+.laporan-header h3 {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin: 0;
+}
+
+.laporan-body {
+    padding: 15px 15px 0 15px;
+}
+
+.location-text {
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+    color: #555;
+    margin-top: -5px;
+    line-height: 1.5;
+}
+
+.location-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    margin-top: 1px;
+}
+
+.laporan-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.laporan-footer a {
+    color: #1e3d8f;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.status-progress {
+    background: #ffecb3; 
+    color: #ffa000; 
+}
+
+.status-complete {
+    background: #c8e6c9; 
+    color: #388e3c; 
+}
+
+.status-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.action-icon {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* ========================================================================= */
+/* 5. MEDIA QUERIES (Responsif) */
+/* ========================================================================= */
+
+@media (max-width: 960px) {
+    .laporan-list {
+        justify-content: center;
+    }
+    .laporan-card {
+        width: 45%; 
+    }
+}
+
+@media (max-width: 650px) {
+    .laporan-card {
+        width: 100%;
+    }
+}
+/* ================== FOOTER ================== */
+.main-footer {
+  background: linear-gradient(165deg, #080e18 0%, #102647 70%, #9c7719 120%);
+  color: #fff;
+  padding: 60px 70px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header logo + nama */
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.footer-logo {
+  width: 75px;
+  height: 55px;
+  object-fit: cover;
+}
+
+/* Konten kolom */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 45px;
+  gap: 20px;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-col p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 15px;
+}
+
+.footer-col a {
+  display: block;
+  margin: 6px 0;
+  color: #eee;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.footer-col a:hover {
+  color: #0077ff;
+}
+
+/* Ikon sosial */
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  background: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.footer-social a:hover {
+  transform: translateY(-5px);
+}
+
+/* Copyright */
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 10px;
+}
+
+
+@media (max-width: 800px) {
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-top {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.footer {
+    background: rgba(0, 0, 0, 0.674);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 80px;
+    font-size: 14px;
+    }
+
+    .footer-container p {
+    margin: 0;
+    opacity: 0.9;
+    }
+
+</style>
+<body>
+    <input type="checkbox" id="toggleSetting">
+    <input type="checkbox" id="toggleProfile">
+    <input type="checkbox" id="toggleLogout">
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="ASSETS/LOGO.png" alt="Logo Aksi Kita">
+        </div>
+
+        <nav class="navlinks">
+            <a href="BERANDA2.html">Beranda</a>
+            <a href="LAPORAN_SAYA.html" class="active">Laporan</a>
+            <a href="PERINGKAT.html">Peringkat</a>
+            <a href="TENTANG.html">Tentang</a>
+        </nav>
+        
+        <label for="toggleProfile" class="user">
+            <span class="username">user1800</span>
+            <img src="ASSETS/USER.png" class="user-img" />
+        </label>
+    </header>
+    <main class="laporan-page">
+        <h1 class="page-title">LAPORAN</h1>
+
+        <div class="laporan-filter">
+            <a href="LAPORAN_SAYA.html" class="filter-btn">Laporan Saya</a>
+            
+            <a href="LAPORAN_KOTA.html" class="filter-btn active">Kota Saya</a>
+            
+            <a href="LAPORAN_INDONESIA.html" class="filter-btn">Seluruh Indonesia</a>
+        </div>
+
+        <div class="laporan-list">
+            
+            <div class="laporan-card">
+                <div class="laporan-header">
+                    <img src="ASSETS/kerusakan_tiang.png" alt="Kerusakan Tiang Kabel Listrik"/>
+                    <h3>Kerusakan Tiang Kabel Listrik</h3>
+                </div>
+                <div class="laporan-body">
+                    <p class="location-text">
+                        <span class="location-icon">📍</span> 
+                        HM72+4WW, Padang Bulan, Kec. Medan Baru, Kota Medan, Sumatera Utara 20155
+                    </p>
+                    <div class="laporan-footer">
+                        <span class="status-badge status-progress">SEDANG DIPROSES...</span>
+                        <a href="#">Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="laporan-card">
+                <div class="laporan-header">
+                    <img src="ASSETS/kerusakan_jalan.png" alt="Kerusakan Jalan"/>
+                    <h3>Kerusakan Jalan</h3>
+                </div>
+                <div class="laporan-body">
+                    <p class="location-text">
+                        <span class="location-icon">📍</span> 
+                        Jl. KH. Zainul Arifin No.7, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+                    </p>
+                    <div class="laporan-footer">
+                        <div class="status-actions">
+                            <span class="status-badge status-complete">SELESAI</span>
+                            <span class="action-icon check-icon">✅</span>
+                            <span class="action-icon like-icon">👍</span>
+                        </div>
+                        <a href="#">Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="laporan-card">
+                <div class="laporan-header">
+                    <img src="ASSETS/rusak7.jpg" alt="Kerusakan Lampu Jalan"/>
+                    <h3>Kerusakan Lampu Jalan</h3>
+                </div>
+                <div class="laporan-body">
+                    <p class="location-text">
+                        <span class="location-icon">📍</span> 
+                        Jl. Pancing No.1B4, Sidorejo Hilir, Kec. Medan Tembung, Kota medan, Sumatera Utara
+                    </p>
+                    <div class="laporan-footer">
+                        <span class="status-badge status-progress">SEDANG DI PROSES....</span>
+                        <a href="#">Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="laporan-card">
+                <div class="laporan-header">
+                    <img src="ASSETS/rusak4.jpg" alt="Kerusakan Jalan"/>
+                    <h3>Kerusakan Jalan</h3>
+                </div>
+                <div class="laporan-body">
+                    <p class="location-text">
+                        <span class="location-icon">📍</span> 
+                        Jl. KH. Zainul Arifin No.7, Madras Hulu, Kec. Medan Polonia, Kota Medan, Sumatera Utara 20152
+                    </p>
+                    <div class="laporan-footer">
+                        <div class="status-actions">
+                            <span class="status-badge status-complete">SELESAI</span>
+                            <span class="action-icon check-icon"></span>
+                            <span class="action-icon like-icon"></span>
+                        </div>
+                        <a href="#">Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="laporan-card">
+                <div class="laporan-header">
+                    <img src="ASSETS/rusak5.jpg" alt="Kerusakan Jembatan"/>
+                    <h3>Kerusakan Tiang Kabel Listrik</h3>
+                </div>
+                <div class="laporan-body">
+                    <p class="location-text">
+                        <span class="location-icon">📍</span> 
+                        HM72+4WW, Padang Bulan, Kec. Medan Baru, Kota Medan, Sumatera Utara 20155
+                    </p>
+                    <div class="laporan-footer">
+                        <span class="status-badge status-progress">SEDANG DIPROSES...</span>
+                        <a href="#">Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- POPUP PROFIL -->
+  <div id="profilePopup" class="popup">
+    <div class="popup-content">
+      <button><i class="fa-solid fa-circle-info"></i> Bantuan</button>
+
+      <!-- FIX: menutup popup profile otomatis -->
+      <label for="toggleSetting"
+        onclick="document.getElementById('toggleProfile').checked=false;">
+        <i class="fa-solid fa-gear"></i> Pengaturan
+      </label>
+
+      <button><i class="fa-solid fa-location-dot"></i> Ubah Alamat</button>
+
+      <!-- FIX: menutup popup profile otomatis -->
+      <label for="toggleLogout"
+        onclick="document.getElementById('toggleProfile').checked=false;">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </label>
+
+      <label for="toggleProfile"
+             style="color:#ccc; padding-top:10px; text-align:center; cursor:pointer;">Tutup</label>
+    </div>
+  </div>
+
+  <!-- POPUP KELUAR -->
+  <div id="logoutPopup" class="popup">
+    <div class="popup-box">
+      <p>Apakah kamu yakin untuk keluar?</p>
+      <p>Keluar dari AksiKita sebagai <b>user1800@gmail.com</b>?</p>
+
+      <div class="popup-actions">
+        <button id="confirmLogout" onclick="location.href='BERANDA1.html'">Iya</button>
+        <label for="toggleLogout" id="cancelLogout">Tidak</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP PENGATURAN -->
+<div id="settingPopup" class="overlay-setting">
+  <label for="toggleSetting" class="overlay-bg"></label>
+
+  <div class="setting-box">
+    <h2 class="title">
+      <i class="fa-solid fa-gear"></i> Pengaturan
+    </h2>
+
+    <!-- Section Profil -->
+    <div class="section">
+      <p class="section-title">Profil</p>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-user"></i> Detail Akun
+      </a>
+    </div>
+
+    <!-- Section Menu -->
+    <div class="section">
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-clock"></i> Dasbor
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-file-lines"></i> Dokumen
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-location-dot"></i> Aktifkan Lokasi Anda
+      </a>
+    </div>
+
+    <!-- Section Notifikasi -->
+    <div class="section">
+      <p class="section-title">Notifikasi</p>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-bell"></i> Notifikasi Aktivitas
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-envelope"></i> Notifikasi Email
+      </a>
+    </div>
+
+    <!-- Section Keamanan -->
+    <div class="section">
+      <p class="section-title">Keamanan</p>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-lock"></i> Ganti Kata Sandi
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-at"></i> Ganti Email
+      </a>
+    </div>
+
+    <!-- Tombol Tutup -->
+    <label for="toggleSetting" class="menu-item exit">
+       Tutup
+    </label>
+  </div>
+</div>
+    
+    <footer class="main-footer">
+        <div class="footer-top">
+            <img src="ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
+            <h3>Aksi Kita</h3>
+        </div>
+      
+        <div class="footer-content">
+            <div class="footer-col">
+                <p>Jl. Bachireng No. 12, Indonesia</p>
+                <p>0821 6888 9060</p>
+                <p>info@aksikita.id</p>
+            </div>
+            <div class="footer-col">
+                <a href="#">Unit Layanan Terpadu</a>
+                <a href="#">Cara Kerja</a>
+                <a href="#">FAQ</a>
+                <a href="#">Aturan Penggunaan</a>
+            </div>
+            <div class="footer-col">
+                <a href="#">Lapor</a>
+                <a href="#">Survei</a>
+                <a href="#">Peta Situs</a>
+                <a href="#">Arsip</a>
+            </div>
+        </div>
+      
+        <div class="footer-social">
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+      
+        <div class="footer-bottom">
+            © 2025 AksiKita. Semua Hak Dilindungi.
+        </div>
+    </footer>
+
+</body>
+</html>
