@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Filter CSS Only</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Poppins, sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+  padding: 40px;
+}
+
+/* ================= FILTER ================= */
+.filter-wrapper {
+  position: relative;
+  width: 260px;
+  margin-bottom: 30px;
+}
+
+/* sembunyiin radio */
+.filter-wrapper input {
+  display: none;
+}
+
+/* tombol dropdown */
+.filter-btn {
+  background: white;
+  padding: 12px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+/* menu dropdown */
+.filter-menu {
+  position: absolute;
+  top: 55px;
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  display: none;
+  overflow: hidden;
+}
+
+.filter-menu label {
+  display: block;
+  padding: 12px 18px;
+  cursor: pointer;
+}
+
+.filter-menu label:hover {
+  background: #f0f4ff;
+}
+
+/* buka dropdown */
+#open-filter:checked ~ .filter-menu {
+  display: block;
+}
+
+/* ================= GRID ================= */
+.laporan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap: 20px;
+}
+
+.laporan-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+/* ================= FILTER LOGIC ================= */
+#all:checked ~ .laporan-grid .laporan-card { display: block; }
+
+#sumut:checked ~ .laporan-grid .laporan-card:not([data-prov="sumut"]) { display: none; }
+#aceh:checked ~ .laporan-grid .laporan-card:not([data-prov="aceh"]) { display: none; }
+#sumsel:checked ~ .laporan-grid .laporan-card:not([data-prov="sumsel"]) { display: none; }
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= FILTER UI ================= -->
+<div class="filter-wrapper">
+
+  <input type="checkbox" id="open-filter">
+
+  <label for="open-filter" class="filter-btn">
+    Pilih Provinsi ▼
+  </label>
+
+  <div class="filter-menu">
+    <label for="all">Semua</label>
+    <label for="sumut">Sumatera Utara</label>
+    <label for="aceh">Aceh</label>
+    <label for="sumsel">Sumatera Selatan</label>
+  </div>
+
+</div>
+
+<!-- radio sebenarnya -->
+<input type="radio" name="prov" id="all" checked>
+<input type="radio" name="prov" id="sumut">
+<input type="radio" name="prov" id="aceh">
+<input type="radio" name="prov" id="sumsel">
+
+<!-- ================= DATA ================= -->
+<div class="laporan-grid">
+
+  <div class="laporan-card" data-prov="sumut">
+    <h3>Medan</h3>
+    <p>Jalan rusak parah</p>
+  </div>
+
+  <div class="laporan-card" data-prov="aceh">
+    <h3>Banda Aceh</h3>
+    <p>Lampu lalu lintas mati</p>
+  </div>
+
+  <div class="laporan-card" data-prov="sumsel">
+    <h3>Palembang</h3>
+    <p>Trotoar rusak</p>
+  </div>
+
+</div>
+
+</body>
+</html>
