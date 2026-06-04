@@ -10,22 +10,37 @@ if (!isset($_SESSION['user_id'])) {
 $id_user   = (int)$_SESSION['user_id'];
 $user_name = htmlspecialchars($_SESSION['nama_lengkap'] ?? 'Pengguna');
 
+
 // Filter laporan
 $filter = $_GET['filter'] ?? 'saya';
 
 if ($filter === 'saya') {
+    // 1. Tampilkan hanya laporan milik user yang sedang login
     $sql  = "SELECT l.*, k.nama_kategori FROM laporan l
              LEFT JOIN kategori k ON k.id_kategori = l.id_kategori
              WHERE l.id_user = ? ORDER BY l.created_at DESC";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $id_user);
+
+} elseif ($filter === 'kecamatan') {
+    // 2. Tampilkan laporan yang berada di kecamatan domisili user
+    // Ambil data kecamatan user dari session yang tadi kita buat di file login
+    $user_kecamatan = $_SESSION['kecamatan'] ?? ''; 
+    
+    $sql  = "SELECT l.*, k.nama_kategori FROM laporan l
+             LEFT JOIN kategori k ON k.id_kategori = l.id_kategori
+             WHERE l.kecamatan = ? ORDER BY l.created_at DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('s', $user_kecamatan);
+
 } else {
-    // kota / semua – tampilkan semua laporan
+    // 3. Tampilkan seluruh laporan (filter=medan atau default lainnya)
     $sql  = "SELECT l.*, k.nama_kategori FROM laporan l
              LEFT JOIN kategori k ON k.id_kategori = l.id_kategori
              ORDER BY l.created_at DESC";
     $stmt = $conn->prepare($sql);
 }
+
 $stmt->execute();
 $laporan = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
@@ -259,7 +274,6 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#fff,#d2
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo"><img src="../ASSETS/LOGO.png" alt="Aksi Kita"></div>
   <nav class="main-nav">
@@ -269,7 +283,6 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#fff,#d2
       <a href="TENTANG.php">Tentang</a>
   </nav>
   <div class="nav-right">
-    <!-- Notification Bell -->
     <div class="noti-wrap">
       <div class="noti-btn" id="notiBellBtn">
         <i class="fa-solid fa-bell" style="color:#fff;font-size:16px;"></i>
@@ -297,7 +310,6 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#fff,#d2
         </div>
       </div>
     </div>
-    <!-- User Avatar -->
     <div class="nav-user" id="navUser">
       <span><?= $user_name ?></span>
       <img src="../ASSETS/USER.png" class="user-img" alt="User"/>
@@ -310,20 +322,31 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#fff,#d2
     <h1><i class="fa-solid fa-file-alt"></i> Laporan Saya</h1>
   </div>
 
-  <!-- Filter -->
   <div class="laporan-filter">
-    <a href="laporan_saya.php?filter=saya"  class="filter-btn <?= $filter==='saya' ?'active':'' ?>">Laporan Saya</a>
-    <a href="laporan_saya.php?filter=kota"  class="filter-btn <?= $filter==='kota'?'active':'' ?>">Kota Saya</a>
-    <a href="laporan_saya.php?filter=semua" class="filter-btn <?= $filter==='semua'?'active':'' ?>">Seluruh Indonesia</a>
+    <a href="laporan_saya.php?filter=saya"      class="filter-btn <?= $filter==='saya' ?'active':'' ?>">Laporan Saya</a>
+    <a href="laporan_saya.php?filter=kecamatan" class="filter-btn <?= $filter==='kecamatan'?'active':'' ?>">Kecamatan Saya</a>
+    <a href="laporan_saya.php?filter=medan"     class="filter-btn <?= $filter==='medan'?'active':'' ?>">Seluruh Kota Medan</a>
   </div>
 
   <div class="laporan-list">
     <?php if (empty($laporan)): ?>
     <div class="empty-state">
       <div class="ico"><i class="fa-solid fa-folder-open"></i></div>
-      <h3>Belum Ada Laporan</h3>
-      <p>Anda belum membuat laporan. Laporkan masalah fasilitas umum sekarang!</p>
-      <a href="laporkan.php"><i class="fa-solid fa-plus"></i> Buat Laporan Baru</a>
+      
+      <?php if ($filter === 'saya'): ?>
+        <h3>Belum Ada Laporan</h3>
+        <p>Anda belum membuat laporan. Laporkan masalah fasilitas umum sekarang!</p>
+        <a href="laporkan.php"><i class="fa-solid fa-plus"></i> Buat Laporan Baru</a>
+        
+      <?php elseif ($filter === 'kecamatan'): ?>
+        <h3>Kecamatan Aman & Terkendali</h3>
+        <p>Belum ada laporan kerusakan fasilitas umum di sekitar <b><?= htmlspecialchars($_SESSION['kecamatan'] ?? 'kecamatan Anda') ?></b>.</p>
+        
+      <?php else: ?>
+        <h3>Belum Ada Laporan</h3>
+        <p>Saat ini belum ada data laporan dari seluruh masyarakat Kota Medan.</p>
+      <?php endif; ?>
+      
     </div>
     <?php else: foreach ($laporan as $r):
       $foto = '../ASSETS/rusak 1.jpeg';
@@ -354,7 +377,6 @@ if (!empty($r['foto_awal'])) {
   </div>
 </main>
 
-<!-- FAB Buat Laporan -->
 <a href="laporkan.php" class="fab-btn" title="Buat Laporan Baru">
   <i class="fa-solid fa-plus"></i>
   <span>Buat Laporan</span>

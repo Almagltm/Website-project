@@ -3,9 +3,10 @@ session_start();
 include '../koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama_lengkap = $_POST['nama_lengkap'];
+$nama_lengkap = $_POST['nama_lengkap'];
 $email = $_POST['email'];
 $no_telp = $_POST['no_telp'];
+$kecamatan = $_POST['kecamatan'];
 
 $password = password_hash(
     $_POST['password'],
@@ -14,15 +15,16 @@ $password = password_hash(
 
 $stmt = $conn->prepare("
 INSERT INTO users
-(nama_lengkap, email, password, no_telp)
-VALUES (?, ?, ?, ?)
+(nama_lengkap, email, password, no_telp, kecamatan)
+VALUES (?, ?, ?, ?, ?)
 ");
 $stmt->bind_param(
-    "ssss",
+    "sssss",
     $nama_lengkap,
     $email,
     $password,
-    $no_telp
+    $no_telp,
+    $kecamatan
 );
 
     if ($stmt->execute()) {
@@ -127,8 +129,24 @@ $stmt->bind_param(
 
         .input-group input[type="email"],
         .input-group input[type="password"],
-        .input-group input[type="text"] {
+        .input-group input[type="text"],
+        .input-group select {
             width: 100%;
+            padding: 8px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        /* Tambahan agar isi dropdown bisa dibaca saat di-klik */
+        .input-group select option {
+            color: #000;
+        }
             padding: 8px 0;
             background: transparent;
             border: none;
@@ -249,6 +267,34 @@ $stmt->bind_param(
             <div class="input-group">
                 <label>No. Telepon</label>
                 <input type="text" name="no_telp" placeholder="Masukkan no. telepon" required>
+            </div>
+
+            <div class="input-group">
+                <label>Kecamatan Domisili</label>
+                <select name="kecamatan" required>
+                    <option value="" disabled selected>— Pilih Kecamatan —</option>
+                    <option value="Medan Amplas">Medan Amplas</option>
+                    <option value="Medan Area">Medan Area</option>
+                    <option value="Medan Barat">Medan Barat</option>
+                    <option value="Medan Baru">Medan Baru</option>
+                    <option value="Medan Belawan">Medan Belawan</option>
+                    <option value="Medan Deli">Medan Deli</option>
+                    <option value="Medan Denai">Medan Denai</option>
+                    <option value="Medan Helvetia">Medan Helvetia</option>
+                    <option value="Medan Johor">Medan Johor</option>
+                    <option value="Medan Kota">Medan Kota</option>
+                    <option value="Medan Labuhan">Medan Labuhan</option>
+                    <option value="Medan Maimun">Medan Maimun</option>
+                    <option value="Medan Marelan">Medan Marelan</option>
+                    <option value="Medan Perjuangan">Medan Perjuangan</option>
+                    <option value="Medan Petisah">Medan Petisah</option>
+                    <option value="Medan Polonia">Medan Polonia</option>
+                    <option value="Medan Selayang">Medan Selayang</option>
+                    <option value="Medan Sunggal">Medan Sunggal</option>
+                    <option value="Medan Tembung">Medan Tembung</option>
+                    <option value="Medan Timur">Medan Timur</option>
+                    <option value="Medan Tuntungan">Medan Tuntungan</option>
+                </select>
             </div>
 
             <div class="input-group pw-wrap">

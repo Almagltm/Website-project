@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Email dan kata sandi wajib diisi.';
     } else {
-        $stmt = $conn->prepare("SELECT id_user, nama_lengkap, email, password FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id_user, nama_lengkap, email, password, kecamatan FROM users WHERE email = ?");
         $stmt->bind_param('s', $email);
         $stmt->execute();
         $user = $stmt->get_result()->fetch_assoc();
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['id_user']      = $user['id_user'];
             $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
             $_SESSION['email']        = $user['email'];
+            $_SESSION['kecamatan']    = $user['kecamatan']; // TAMBAHAN
 
             logActivity('user', $user['id_user'], $user['nama_lengkap'], 'Login User', 'Login berhasil dari halaman user');
             header('Location: BERANDA2.php');

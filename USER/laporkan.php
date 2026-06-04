@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $isi_laporan      = trim($_POST['isi']              ?? '');
     $tanggal_kejadian = trim($_POST['tanggal']          ?? '');
     $lokasi           = trim($_POST['lokasi']           ?? '');
+    $kecamatan        = trim($_POST['kecamatan']        ?? '');
     $instansi_tujuan  = trim($_POST['instansi']         ?? '');
     $id_kategori      = intval($_POST['id_kategori']    ?? 0);
     $kategori_lainnya = trim($_POST['kategori_lainnya'] ?? '');
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (empty($judul) || $id_kategori === 0 || empty($lokasi)) {
+    if (empty($judul) || $id_kategori === 0 || empty($lokasi) || empty($kecamatan)) {
         $error = 'Harap lengkapi semua field yang wajib diisi (*).';
     } else {
         // Cek apakah kolom foto_awal dan kategori_lainnya ada di tabel
@@ -63,30 +64,32 @@ INSERT INTO laporan (
     judul,
     isi_laporan,
     lokasi,
+    kecamatan,
     instansi_tujuan,
     tanggal_kejadian,
     status,
     foto_awal,
     kategori_lainnya
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
 ");
-        $stmt->bind_param(
-    'iisssssss',
-    $id_user,
-    $id_kategori,
-    $judul,
-    $isi_laporan,
-    $lokasi,
-    $instansi_tujuan,
-    $tanggal_kejadian,
-    $foto_awal_db,
-    $kategori_lainnya
-);
-        if ($stmt->execute()) {
-    $id_laporan = $conn->insert_id;
+$stmt->bind_param(
+            'iissssssss',
+            $id_user,
+            $id_kategori,
+            $judul,
+            $isi_laporan,
+            $lokasi,
+            $kecamatan,
+            $instansi_tujuan,
+            $tanggal_kejadian,
+            $foto_awal_db,
+            $kategori_lainnya
+        );
 
-            
+        if ($stmt->execute()) {
+            $id_laporan = $conn->insert_id;
+
 
             // Log aktivitas
             logActivity('user', $id_user, $user_name, 'Membuat Laporan Baru', 'ID Laporan: ' . $id_laporan . ', Judul: ' . $judul);
@@ -346,9 +349,38 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f4;min-height:100vh;}
           </div>
         </div>
 
-        <div class="fg">
-          <label for="lokasi"><i class="fa-solid fa-location-dot"></i> Lokasi Kejadian *</label>
-          <input type="text" id="lokasi" name="lokasi" placeholder="Contoh: Jl. Urip Sumoharjo No.5, Makassar" required value="<?= htmlspecialchars($_POST['lokasi'] ?? '') ?>"/>
+        <div class="row-2">
+          <div class="fg">
+            <label for="lokasi"><i class="fa-solid fa-location-dot"></i> Lokasi Kejadian *</label>
+            <input type="text" id="lokasi" name="lokasi" placeholder="Contoh: Jl. Gatot Subroto No.5" required value="<?= htmlspecialchars($_POST['lokasi'] ?? '') ?>"/>
+          </div>
+          <div class="fg">
+            <label for="kecamatan"><i class="fa-solid fa-map-location-dot"></i> Kecamatan *</label>
+            <select id="kecamatan" name="kecamatan" required>
+              <option value="" disabled selected>— Pilih Kecamatan —</option>
+              <option value="Medan Amplas" <?= (($_POST['kecamatan'] ?? '') == 'Medan Amplas') ? 'selected' : '' ?>>Medan Amplas</option>
+              <option value="Medan Area" <?= (($_POST['kecamatan'] ?? '') == 'Medan Area') ? 'selected' : '' ?>>Medan Area</option>
+              <option value="Medan Barat" <?= (($_POST['kecamatan'] ?? '') == 'Medan Barat') ? 'selected' : '' ?>>Medan Barat</option>
+              <option value="Medan Baru" <?= (($_POST['kecamatan'] ?? '') == 'Medan Baru') ? 'selected' : '' ?>>Medan Baru</option>
+              <option value="Medan Belawan" <?= (($_POST['kecamatan'] ?? '') == 'Medan Belawan') ? 'selected' : '' ?>>Medan Belawan</option>
+              <option value="Medan Deli" <?= (($_POST['kecamatan'] ?? '') == 'Medan Deli') ? 'selected' : '' ?>>Medan Deli</option>
+              <option value="Medan Denai" <?= (($_POST['kecamatan'] ?? '') == 'Medan Denai') ? 'selected' : '' ?>>Medan Denai</option>
+              <option value="Medan Helvetia" <?= (($_POST['kecamatan'] ?? '') == 'Medan Helvetia') ? 'selected' : '' ?>>Medan Helvetia</option>
+              <option value="Medan Johor" <?= (($_POST['kecamatan'] ?? '') == 'Medan Johor') ? 'selected' : '' ?>>Medan Johor</option>
+              <option value="Medan Kota" <?= (($_POST['kecamatan'] ?? '') == 'Medan Kota') ? 'selected' : '' ?>>Medan Kota</option>
+              <option value="Medan Labuhan" <?= (($_POST['kecamatan'] ?? '') == 'Medan Labuhan') ? 'selected' : '' ?>>Medan Labuhan</option>
+              <option value="Medan Maimun" <?= (($_POST['kecamatan'] ?? '') == 'Medan Maimun') ? 'selected' : '' ?>>Medan Maimun</option>
+              <option value="Medan Marelan" <?= (($_POST['kecamatan'] ?? '') == 'Medan Marelan') ? 'selected' : '' ?>>Medan Marelan</option>
+              <option value="Medan Perjuangan" <?= (($_POST['kecamatan'] ?? '') == 'Medan Perjuangan') ? 'selected' : '' ?>>Medan Perjuangan</option>
+              <option value="Medan Petisah" <?= (($_POST['kecamatan'] ?? '') == 'Medan Petisah') ? 'selected' : '' ?>>Medan Petisah</option>
+              <option value="Medan Polonia" <?= (($_POST['kecamatan'] ?? '') == 'Medan Polonia') ? 'selected' : '' ?>>Medan Polonia</option>
+              <option value="Medan Selayang" <?= (($_POST['kecamatan'] ?? '') == 'Medan Selayang') ? 'selected' : '' ?>>Medan Selayang</option>
+              <option value="Medan Sunggal" <?= (($_POST['kecamatan'] ?? '') == 'Medan Sunggal') ? 'selected' : '' ?>>Medan Sunggal</option>
+              <option value="Medan Tembung" <?= (($_POST['kecamatan'] ?? '') == 'Medan Tembung') ? 'selected' : '' ?>>Medan Tembung</option>
+              <option value="Medan Timur" <?= (($_POST['kecamatan'] ?? '') == 'Medan Timur') ? 'selected' : '' ?>>Medan Timur</option>
+              <option value="Medan Tuntungan" <?= (($_POST['kecamatan'] ?? '') == 'Medan Tuntungan') ? 'selected' : '' ?>>Medan Tuntungan</option>
+            </select>
+          </div>
         </div>
 
         <div class="fg">

@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $_SESSION['user_id'] = $user['id_user'];
             $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
-
+            $_SESSION['kecamatan'] = $user['kecamatan'];
             echo "
             <script>
                 alert('Login berhasil!');
