@@ -35,19 +35,28 @@ body {
     color: white;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Logo dan Menu di kiri */
-    padding: 13px 55px;
+    padding: 13px 50px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    gap: 50px; /* Jarak antara Logo dan Menu */
+    flex-wrap: wrap;
 }
 
 .logo img {
     height: 55px;
 }
+
+.navlinks {
+  display: flex;
+  gap: 15px;
+  margin-left: 60px;
+  flex-wrap: wrap;
+  
+}
+
+
 
 .navlinks a {
     color: white;
@@ -64,10 +73,9 @@ body {
 
 /* Auth Buttons */
 .nav-auth {
-  display: flex;
-  align-items: center;
-  transform: translate(263%, 0%);
-  gap: 22px;
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
 }
 
 .btn-outline {
@@ -283,15 +291,15 @@ body {
         </div>
 
         <nav class="navlinks">
-            <a href="BERANDA1.html">Beranda</a>
+            <a href="BERANDA1.php">Beranda</a>
             <a href="#" class="active">Laporan</a>
-            <a href="PERINGKATsebelum.html">Peringkat</a>
-            <a href="TENTANGsebelum.html">Tentang</a>
+            <a href="PERINGKATsebelum.php">Peringkat</a>
+            <a href="TENTANGsebelum.php">Tentang</a>
         </nav>
         
         <div class="nav-auth">
-        <button onclick="window.location.href='DAFTAR.html'" class="btn-outline">Daftar</button>
-        <button onclick="window.location.href='MASUK.html'" class="btn-outline">Masuk</button>
+        <button onclick="window.location.href='./USER/DAFTAR.php'" class="btn-outline">Daftar</button>
+        <button onclick="window.location.href='./login.php'" class="btn-outline">Masuk</button>
       </div>
     </header>
 
@@ -306,10 +314,10 @@ body {
         </p>
 
         <div class="notfound-buttons">
-            <button class="notfound-btn" onclick="window.location.href='MASUK.html'">
+            <button class="notfound-btn" onclick="window.location.href='./login.php'">
                 Masuk
             </button>
-            <button class="notfound-btn" onclick="window.location.href='DAFTAR.html'">
+            <button class="notfound-btn" onclick="window.location.href='./USER/DAFTAR.php'">
                 Daftar
             </button>
         </div>

@@ -1,3 +1,30 @@
+<?php
+session_start();
+require_once '../db.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: MASUK.php");
+    exit();
+}
+
+$id_user = $_SESSION['user_id'];
+
+$stmt = $conn->prepare("
+    SELECT nama_lengkap,email,no_telp
+    FROM users
+    WHERE id_user = ?
+");
+
+$stmt->bind_param("i", $id_user);
+$stmt->execute();
+
+$user = $stmt->get_result()->fetch_assoc();
+
+$stmt->close();
+
+$nama = $user['nama_lengkap'];
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -18,19 +45,63 @@
     }
 
     .navbar {
-      background: #1e3d8f;
-      color: white;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 13px 55px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      gap: 50px; /* Jarak antara Logo dan Menu */
-    }
+    background: #1e3d8f;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 13px 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    flex-wrap: wrap;
+}
+
+.navbar-right{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+
+  .hero-text h1 {
+    font-size: 32px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .showcase-wrapper {
+    flex-direction: column;
+  }
+
+  .zigzag-item,
+  .zigzag-item.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+}
+
+
+.navbar nav {
+  display: flex;
+  gap: 15px;
+  margin-left: 60px;
+  flex-wrap: wrap;
+  
+}
 
     .navbar nav a {
       color: white;
@@ -50,13 +121,21 @@
       height: 55px;
     }
 
-    .user {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-left: auto;
-    }
+    .user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-left:auto;
+    cursor:pointer;
+}
+
+    .user-img{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,.4);
+}
 
     .username {
       display: inline-block;
@@ -68,93 +147,67 @@
       cursor: pointer;
     }
 
-    /* HIDE CHECKBOX */
-    #toggleProfile,
-    #toggleLogout,
-    #toggleSetting {
-      display: none;
-    }
+    
+    /* Notification Bell */
+.noti-wrap{
+    position:relative;
+    display:flex;
+    align-items:center;
+   
+}
+.noti-btn{cursor:pointer;position:relative;width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;transition:.2s;}
+.noti-btn:hover{background:rgba(255,255,255,.22);}
+.noti-badge{position:absolute;top:-3px;right:-3px;background:#e63946;color:#fff;border-radius:50%;
+  width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;border:1px solid #1e3d8f;}
+.noti-dropdown{position:absolute;top:50px;right:0;background:#fff;border-radius:12px;
+  box-shadow:0 10px 30px rgba(15,23,42,.15);width:300px;border:1px solid #e2e8f0;
+  display:none;z-index:9999;overflow:hidden;font-family:'Poppins',sans-serif;}
 
-    .popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
+.noti-header{
+  padding:12px 15px;
+  background:#f8fafc;
+  border-bottom:1px solid #e2e8f0;
+  font-weight:700;
+  color:#1e3d8f;
+}
 
-    #toggleProfile:checked ~ #profilePopup { display: flex; }
-    #toggleLogout:checked ~ #logoutPopup { display: flex; }
+.noti-item{
+  display:block;
+  padding:12px 15px;
+  text-decoration:none;
+  border-bottom:1px solid #f1f5f9;
+}
 
-    .popup-content {
-      background: rgba(65, 65, 65, 0.8);
-      border-radius: 15px;
-      padding: 25px;
-      width: 270px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      transform: translate(190%, -70%);
-    }
+.noti-item:hover{
+  background:#f8fafc;
+}
 
-    .popup-content button,
-    .popup-content label {
-      background: transparent;
-      border: none;
-      width: 100%;
-      text-align: left;
-      padding: 12px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      color: white;
-      font-size: 15px;
-    }
+.noti-title{
+  display:block;
+  color:#1e293b;
+  font-size:13px;
+  font-weight:600;
+}
 
-    .popup-content button:hover,
-    .popup-content label:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
+.noti-desc{
+  display:block;
+  color:#64748b;
+  font-size:12px;
+  margin-top:2px;
+}
 
-    .popup-box {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      text-align: center;
-    }
-
-    .popup-actions {
-      margin-top: 20px;
-    }
-
-    .popup-actions button,
-    .popup-actions label {
-      margin: 0 10px;
-      padding: 8px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-    }
-
-    #confirmLogout {
-      background: #e63946;
-      color: white;
-    }
-
-    #cancelLogout {
-      background: #ccc;
-    }
 
     .hero { position: relative; 
       text-align: center; 
-      overflow: visible; 
+      overflow: hidden; 
     }
     .hero-img { 
       width: 100%; 
       border-radius: 0 0 130px 130px; 
-      height: 700px; 
+      min-height: 400px;
+      height: 85vh; 
       object-fit: cover; 
       display: block; 
     }
@@ -166,8 +219,8 @@
       color: white; 
     }
     .hero-text h1 { 
-      font-size: 50px; 
-      max-width: 600px; 
+      font-size: clamp(30px, 5vw, 50px);
+  width: 90%; 
       margin: auto; 
     }
     .laporkan-btn { 
@@ -179,7 +232,7 @@
       border-radius: 12px; 
       cursor: pointer; 
       font-size: 22px; 
-      transform: translate(3%, 20%); 
+      
     }
 
     .laporkan-btn:hover {
@@ -228,49 +281,12 @@
     opacity: 0.9;
     }
 
-
-    /* POPUP PENGATURAN */
-    .overlay-setting {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.35);
-      visibility: hidden;
-      opacity: 0;
-      transition: .3s;
-      z-index: 99999;
-    }
-
-    #toggleSetting:checked ~ #settingPopup {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .overlay-bg {
-      position: absolute;
-      inset: 0;
-      cursor: pointer;
-    }
-
-    .setting-box {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 330px;
-      background: white;
-      transform: translate(-50%, -50%) scale(0.8);
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
-      opacity: 0;
-      transition: .3s;
-    }
-
     /* ================== ABOUT SECTION ================== */
 .about-section {
-  padding: 350px 70px;
+  padding: 120px 7%;
   background: #ffffff;
-  margin-top: -350px;
-  margin-bottom: -100px;
+  margin-top: 0;
+  margin-bottom: 0;
   
 }
 
@@ -289,7 +305,7 @@
 }
 
 .about-section p {
-  font-size: 16px;
+  font-size: 20px;
   color: #444;
   max-width: 800px;
   margin: auto;
@@ -349,7 +365,7 @@
 /* ================== ANOTHER DESCRIPTION ================== */
 /* SHOWCASE SECTION STYLE */
 .showcase {
-padding: -250px 200px;
+padding: 80px 7%;
 background: #ffffff;
 margin-bottom: 100px;
 }
@@ -361,7 +377,7 @@ align-items: center;
 gap: 60px;
 max-width: 1200px;
 margin: auto;
-transform: translate(0%, -20%);
+margin-top: -50px;
 }
 
 /* TEXT */
@@ -540,28 +556,7 @@ max-width: 90%;
     opacity: 0.9;
     }
 
-    #toggleSetting:checked ~ #settingPopup .setting-box {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .setting-box .title { font-size: 24px; margin-bottom: 20px; display: flex; gap: 8px; align-items: center; }
-    .section { margin-bottom: 18px; }
-    .section-title { font-weight: bold; font-size: 14px; margin-bottom: 6px; }
-    .menu-item { display: block; padding: 7px 0; text-decoration: none; color: #333; font-size: 15px; cursor: pointer;}
-    .menu-item:hover { color: #0077ff; }
-    .exit { font-weight: bold; margin-top: 10px; transform: translate(40%, 0%); }
-
-    /* AUTO CLOSE POPUP */
-    #toggleSetting:checked ~ #profilePopup { display: none !important; }
-    #toggleSetting:checked ~ #logoutPopup { display: none !important; }
-
-    #toggleProfile:checked ~ #settingPopup { visibility: hidden !important; opacity: 0 !important; }
-    #toggleProfile:checked ~ #logoutPopup { display: none !important; }
-
-    #toggleLogout:checked ~ #profilePopup { display: none !important; }
-    #toggleLogout:checked ~ #settingPopup { visibility: hidden !important; opacity: 0 !important; }
-
+  
 
 /* =============== ZIGZAG MODERN SECTION =============== */
 .zigzag-container h2 {
@@ -575,7 +570,7 @@ max-width: 90%;
     margin: auto auto;
     max-height: 100%;
     margin-bottom: -150px;
-    padding: 100px 150px;
+    padding: 80px 7%;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -664,40 +659,89 @@ max-width: 90%;
     }
 }
 
+.showcase-btn {
+  text-decoration: none;
+}
 
   </style>
 </head>
 
 <body>
 
-  <input type="checkbox" id="toggleSetting">
-  <input type="checkbox" id="toggleProfile">
-  <input type="checkbox" id="toggleLogout">
-
   <header class="navbar">
     <div class="logo">
-      <img src="ASSETS/LOGO.png" class="logo-img">
+      <img src="../ASSETS/LOGO.png" class="logo-img">
     </div>
 
     <nav>
       <a href="#" class="active">Beranda</a>
-      <a href="LAPORAN_SAYA.html">Laporan</a>
-      <a href="PERINGKAT.html">Peringkat</a>
-      <a href="TENTANG.html">Tentang</a>
+      <a href="laporan_saya.php">Laporan</a>
+      <a href="peringkat.php">Peringkat</a>
+      <a href="TENTANG.php">Tentang</a>
     </nav>
 
-    <label for="toggleProfile" class="user">
-      <span class="username">user1800</span>
-      <img src="ASSETS/USER.png" class="user-img" />
-    </label>
+    <div class="user" id="navUser">
+      <div class="noti-wrap">
+
+  <div class="noti-btn" id="notiBellBtn">
+    <i class="fa-solid fa-bell"></i>
+
+    <?php if($noti_count > 0): ?>
+      <span class="noti-badge">
+        <?= $noti_count ?>
+      </span>
+    <?php endif; ?>
+
+  </div>
+
+  <div class="noti-dropdown" id="notiDropdown">
+
+    <div class="noti-header">
+      Notifikasi
+    </div>
+
+    <?php if(empty($noti_items)): ?>
+
+      <div style="padding:20px;text-align:center;color:#64748b;">
+        Belum ada notifikasi
+      </div>
+
+    <?php else: ?>
+
+      <?php foreach($noti_items as $item): ?>
+
+        <a href="<?= $item['link'] ?>" class="noti-item">
+          <span class="noti-title">
+            <?= $item['title'] ?>
+          </span>
+
+          <span class="noti-desc">
+            <?= $item['desc'] ?>
+          </span>
+        </a>
+
+      <?php endforeach; ?>
+
+    <?php endif; ?>
+
+  </div>
+
+</div>
+    <span class="username">
+        <?php echo htmlspecialchars($nama); ?>
+    </span>
+
+    <img src="../ASSETS/USER.png" class="user-img">
+</div>
+
   </header>
 
   <section class="hero">
-    <img src="ASSETS/Main Background.jpg" class="hero-img" />
+    <img src="../ASSETS/Main Background.jpg" class="hero-img" />
     <div class="hero-text">
       <h1>MARI BERKONTRIBUSI DEMI KEBAIKAN INDONESIA</h1>
 
-      <form action="LAPORKAN.html">
+      <form action="laporkan.php">
         <button class="laporkan-btn">LAPORKAN</button>
       </form>
 
@@ -705,121 +749,25 @@ max-width: 90%;
   </section>
 
   <section class="cards">
-    <a href="POPULER.html" class="card">
-      <img src="ASSETS/Laporan Terpopuler.avif">
-      <h3>LAPORAN TERPOPULER</h3>
-      <p>Berdasarkan dari laporan yang paling populer di Kota Medan</p>
+    <a href="laporan_terbaru.php" class="card">
+      <img src="../ASSETS/Laporan Terpopuler.avif">
+      <h3>LAPORAN TERBARU</h3>
+      <p>Berdasarkan dari laporan yang terbaru di Kota Medan</p>
     </a>
     
-    <a href="STATISTIK.HTML" class="card">
-      <img src="ASSETS/Statistika Laporan.jpg">
+    <a href="STATISTIK.php" class="card">
+      <img src="../ASSETS/Statistika Laporan.jpg">
       <h3>STATISTIKA LAPORAN</h3>
       <p>Hasil analisis laporan-laporan yang ada di Kota Medan</p>
     </a>
 
-    <a href="INFO_PENTING.html" class="card">
-      <img src="ASSETS/Info Penting.png">
+    <a href="INFO_PENTING.php" class="card">
+      <img src="../ASSETS/Info Penting.png">
       <h3>INFO PENTING</h3>
       <p>Pengumuman resmi mengenai pemerintahan Kota Medan</p>
     </a>
   </section>
 
-
-  <!-- POPUP PROFIL -->
-  <div id="profilePopup" class="popup">
-    <div class="popup-content">
-      <button><i class="fa-solid fa-circle-info"></i> Bantuan</button>
-
-      <!-- FIX: menutup popup profile otomatis -->
-      <label for="toggleSetting"
-        onclick="document.getElementById('toggleProfile').checked=false;">
-        <i class="fa-solid fa-gear"></i> Pengaturan
-      </label>
-
-      <button><i class="fa-solid fa-location-dot"></i> Ubah Alamat</button>
-
-      <!-- FIX: menutup popup profile otomatis -->
-      <label for="toggleLogout"
-        onclick="document.getElementById('toggleProfile').checked=false;">
-        <i class="fa-solid fa-right-from-bracket"></i> Keluar
-      </label>
-
-      <label for="toggleProfile"
-             style="color:#ccc; padding-top:10px; text-align:center; cursor:pointer;">Tutup</label>
-    </div>
-  </div>
-
-  <!-- POPUP KELUAR -->
-  <div id="logoutPopup" class="popup">
-    <div class="popup-box">
-      <p>Apakah kamu yakin untuk keluar?</p>
-      <p>Keluar dari AksiKita sebagai <b>user1800@gmail.com</b>?</p>
-
-      <div class="popup-actions">
-        <button id="confirmLogout" onclick="location.href='BERANDA1.html'">Iya</button>
-        <label for="toggleLogout" id="cancelLogout">Tidak</label>
-      </div>
-    </div>
-  </div>
-
-  <!-- POPUP PENGATURAN -->
-<div id="settingPopup" class="overlay-setting">
-  <label for="toggleSetting" class="overlay-bg"></label>
-
-  <div class="setting-box">
-    <h2 class="title">
-      <i class="fa-solid fa-gear"></i> Pengaturan
-    </h2>
-
-    <!-- Section Profil -->
-    <div class="section">
-      <p class="section-title">Profil</p>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-user"></i> Detail Akun
-      </a>
-    </div>
-
-    <!-- Section Menu -->
-    <div class="section">
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-clock"></i> Dasbor
-      </a>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-file-lines"></i> Dokumen
-      </a>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-location-dot"></i> Aktifkan Lokasi Anda
-      </a>
-    </div>
-
-    <!-- Section Notifikasi -->
-    <div class="section">
-      <p class="section-title">Notifikasi</p>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-bell"></i> Notifikasi Aktivitas
-      </a>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-envelope"></i> Notifikasi Email
-      </a>
-    </div>
-
-    <!-- Section Keamanan -->
-    <div class="section">
-      <p class="section-title">Keamanan</p>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-lock"></i> Ganti Kata Sandi
-      </a>
-      <a href="#" class="menu-item">
-        <i class="fa-solid fa-at"></i> Ganti Email
-      </a>
-    </div>
-
-    <!-- Tombol Tutup -->
-    <label for="toggleSetting" class="menu-item exit">
-       Tutup
-    </label>
-  </div>
-</div>
 
     <!-- ABOUT SECTION -->
 <section class="about-section">
@@ -834,7 +782,7 @@ max-width: 90%;
 
     <div class="about-grid">
       <div class="about-card">
-        <img src="ASSETS/laporanpublik.webp" alt="Laporan Publik">
+        <img src="../ASSETS/laporanpublik.webp" alt="Laporan Publik">
         <h3>Laporan Publik</h3>
         <p>
           Laporkan masalah yang terjadi di lingkunganmu kapan saja, di mana saja.
@@ -842,7 +790,7 @@ max-width: 90%;
       </div>
 
       <div class="about-card">
-        <img src="ASSETS/verifikasicepat.jpg" alt="Verifikasi Cepat">
+        <img src="../ASSETS/verifikasicepat.jpg" alt="Verifikasi Cepat">
         <h3>Verifikasi Cepat</h3>
         <p>
           Tim terkait akan memverifikasi informasi secara otomatis dan cepat.
@@ -850,7 +798,7 @@ max-width: 90%;
       </div>
 
       <div class="about-card">
-        <img src="ASSETS/transparansidata.jpg" alt="Transparansi Data">
+        <img src="../ASSETS/transparansidata.jpg" alt="Transparansi Data">
         <h3>Transparansi Data</h3>
         <p>
           Semua status laporan dapat dipantau secara real-time oleh masyarakat.
@@ -880,11 +828,11 @@ max-width: 90%;
     oleh pihak yang berwenang, serta dapat dipantau oleh publik secara terbuka.
   </p>
 
-  <button class="showcase-btn">Pelajari Lebih Lanjut</button>
+  <a href="TENTANG.php" class="showcase-btn">Pelajari Lebih Lanjut</a>
 </div>
 
 <div class="showcase-image">
-  <img src="ASSETS/kolase.png" alt="Mockup AksiKita">
+  <img src="../ASSETS/kolase.png" alt="Mockup AksiKita">
 </div>
 
   </div>
@@ -952,7 +900,7 @@ max-width: 90%;
   
   <footer class="main-footer">
   <div class="footer-top">
-    <img src="ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
+    <img src="../ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
     <h3>Aksi Kita</h3>
   </div>
 
@@ -992,9 +940,40 @@ max-width: 90%;
   </div>
 
   <div class="footer-bottom">
-    © 2025 AksiKita. Semua Hak Dilindungi.
+    © 2026 AksiKita. Semua Hak Dilindungi.
   </div>
 </footer>
 
+
+<?php include 'profile_modal.php'; ?>
+
+<script>
+const bell = document.getElementById("notiBellBtn");
+const dropdown = document.getElementById("notiDropdown");
+
+if(bell && dropdown){
+
+  bell.addEventListener("click", function(e){
+    e.stopPropagation();
+
+    dropdown.style.display =
+      dropdown.style.display === "block"
+      ? "none"
+      : "block";
+  });
+
+  document.addEventListener("click", function(e){
+
+    if(
+      !dropdown.contains(e.target) &&
+      !bell.contains(e.target)
+    ){
+      dropdown.style.display = "none";
+    }
+
+  });
+
+}
+</script>
 </body>
 </html>

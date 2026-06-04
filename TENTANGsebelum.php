@@ -1,9 +1,25 @@
+<?php
+// Hubungkan ke file koneksi database
+// Sesuaikan path jika lokasi file tentangsebelum.php berada di dalam folder tertentu (misal jika sejajar dengan index/beranda, gunakan 'koneksi.php')
+include 'koneksi.php';
+
+/* 1. AMBIL DATA TENTANG */
+$tentang = mysqli_query($conn, "SELECT * FROM tentang LIMIT 1");
+$data_tentang = mysqli_fetch_assoc($tentang);
+
+/* 2. AMBIL VIDEO */
+$video = mysqli_query($conn, "SELECT * FROM tentang_video LIMIT 1");
+$data_video = mysqli_fetch_assoc($video);
+
+/* 3. AMBIL TIM PENGEMBANG */
+$tim = mysqli_query($conn, "SELECT * FROM tim_pengembang");
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Aksi Kita</title>
+    <title><?= htmlspecialchars($data_tentang['judul'] ?? 'Tentang Aksi Kita') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +43,6 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    /* Removed padding-top here as it's now an inline style on .about-aksi-kita for specific control */
 }
 
 .section-title {
@@ -44,18 +59,25 @@ body {
     color: white;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Logo dan Menu di kiri */
-    padding: 13px 55px;
+    padding: 13px 50px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    gap: 50px; /* Jarak antara Logo dan Menu */
+    flex-wrap: wrap;
 }
 
 .logo img {
     height: 55px;
+}
+
+.navlinks {
+  display: flex;
+  gap: 15px;
+  margin-left: 60px;
+  flex-wrap: wrap;
+  
 }
 
 .navlinks a {
@@ -73,9 +95,8 @@ body {
 
 .nav-auth {
   display: flex;
-  align-items: center;
-  transform: translate(255%, -1%)scale(100%);
-  gap: 20px;
+  margin-left: auto;
+  gap: 10px;
 }
 
 .btn-outline {
@@ -188,7 +209,6 @@ body {
     justify-content: center; /* Ubah ke center agar seimbang jika jumlah ganjil */
     flex-wrap: wrap; 
     gap: 20px;
-    /* align-items: stretch; secara default sudah aktif, membuat semua kartu sama tinggi */
 }
 
 .team-member-card {
@@ -196,12 +216,9 @@ body {
     padding: 20px 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    
-    /* PERBAIKAN UTAMA: Gunakan Flex Column untuk layout kartu */
     display: flex;
     flex-direction: column; 
     align-items: center; /* Pastikan semua isi rata tengah */
-    
     width: 18%; 
     min-width: 200px; /* Sedikit diperlebar agar teks tidak terlalu terhimpit */
     margin-bottom: 20px;
@@ -249,13 +266,9 @@ body {
     background-color: #ADD8E6; 
     padding: 10px; /* Padding sedikit ditambah */
     border-radius: 5px;
-    
-    /* PERBAIKAN: Agar kotak biru menempel di bawah dan ukurannya rata */
     width: 100%;          /* Lebar penuh */
     margin-top: auto;     /* Dorong kotak ke paling bawah kartu */
     min-height: 60px;     /* Paksa tinggi minimal agar semua kotak sama besar */
-    
-    /* Gunakan Flexbox HANYA DI DALAM kotak ini untuk menengahkan teks */
     display: flex;
     align-items: center;     /* Tengah vertikal */
     justify-content: center; /* Tengah horizontal */
@@ -376,8 +389,6 @@ body {
     margin: 0;
     opacity: 0.9;
     }
-
-   
 </style>
 <body>
     <header class="navbar">
@@ -386,94 +397,85 @@ body {
         </div>
 
         <nav class="navlinks">
-            <a href="BERANDA1.html">Beranda</a>
-            <a href="LAPORANsebelum.html">Laporan</a>
-            <a href="PERINGKATsebelum.html">Peringkat</a>
-            <a href="TENTANGsebelum.html" class="active">Tentang</a>
+            <a href="BERANDA1.php">Beranda</a>
+            <a href="LAPORANsebelum.php">Laporan</a>
+            <a href="PERINGKATsebelum.php">Peringkat</a>
+            <a href="TENTANGsebelum.php" class="active">Tentang</a>
         </nav>
         <div class="nav-auth">
-      <button onclick="window.location.href='DAFTAR.html'" class="btn-outline">Daftar</button>
-      <button onclick="window.location.href='MASUK.html'" class="btn-outline">Masuk</button>
-    </div>
+          <button onclick="window.location.href='./USER/DAFTAR.php'" class="btn-outline">Daftar</button>
+          <button onclick="window.location.href='./login.php'" class="btn-outline">Masuk</button>
+        </div>
       
     </header>
     
     <main class="container">
         <section class="about-aksi-kita" style="padding-top: 100px;"> 
             <div class="content-left">
-                <img src="ASSETS/kolase.png" alt="Gambar Kolaborasi Aksi Kita">
+                <?php if(!empty($data_tentang['gambar'])): ?>
+                    <img src="ASSETS/<?= htmlspecialchars($data_tentang['gambar']) ?>" alt="Gambar Kolaborasi Aksi Kita">
+                <?php else: ?>
+                    <img src="ASSETS/kolase.png" alt="Gambar Kolaborasi Aksi Kita">
+                <?php endif; ?>
             </div>
             <div class="content-right">
-                <h1 class="section-title" style="font-family: 'poppins';">Tentang Aksi Kita</h1>
-                <p>Aksi Kita adalah platform pelaporan digital yang memberdayakan masyarakat untuk berpartisipasi aktif dalam menjaga kualitas fasilitas umum di seluruh Indonesia.</p>
-                <p>Website ini memungkinkan Anda melaporkan kerusakan dengan bukti visual (foto/video) secara cepat dan akurat. Laporan dapat berupa kerusakan di lingkungan sekitar Anda atau di seluruh penjuru Indonesia.</p>
-                <p>Keunikan Aksi Kita terletak pada sistem Penilaian Publik yang transparan. Setelah perbaikan dilakukan, masyarakat dapat memberikan rating berdasarkan kecepatan penanganan dan kualitas perbaikan oleh pemerintah. Sistem ini menciptakan akuntabilitas dan mendorong pihak berwenang untuk bertindak cepat dan efektif.</p>
-                <p>Aksi Kita adalah wadah kolaborasi untuk perubahan. Mari bersama-sama pastikan fasilitas publik terawat optimal.</p>
+                <h1 class="section-title" style="font-family: 'poppins'; text-align: left;">
+                    <?= htmlspecialchars($data_tentang['judul'] ?? 'Tentang Aksi Kita') ?>
+                </h1>
+                <p><?= nl2br(htmlspecialchars($data_tentang['deskripsi'] ?? 'Aksi Kita adalah platform pelaporan digital yang memberdayakan masyarakat untuk berpartisipasi aktif dalam menjaga kualitas fasilitas umum di seluruh Indonesia.')) ?></p>
             </div>
         </section>
 
         <section class="intro-video" style="margin-top:80px; margin-bottom:60px;">
-    <h2 class="intro-title">Satu Aplikasi untuk Semua Laporan Warga</h2>
+            <h2 class="intro-title"><?= htmlspecialchars($data_video['judul'] ?? 'Satu Aplikasi untuk Semua Laporan Warga') ?></h2>
 
-    <div class="intro-video-frame">
-        <video controls>
-            <source src="ASSETS/Video.mp4" type="video/mp4">
-            Browser Anda tidak mendukung video.
-        </video>
-    </div>
+            <div class="intro-video-frame">
+                <video controls>
+                    <?php if(!empty($data_video['file_video'])): ?>
+                        <source src="ASSETS/<?= htmlspecialchars($data_video['file_video']) ?>" type="video/mp4">
+                    <?php else: ?>
+                        <source src="ASSETS/Video.mp4" type="video/mp4">
+                    <?php endif; ?>
+                    Browser Anda tidak mendukung video.
+                </video>
+            </div>
 
-    <p class="intro-desc">
-        “Melalui Aksi Kita, setiap laporan warga bisa ditangani lebih cepat dan tepat. Video ini menunjukkan bagaimana aplikasi membantu meningkatkan kualitas lingkungan kita.”
-      </p>
-</section>
+            <p class="intro-desc">
+                “<?= htmlspecialchars($data_video['deskripsi'] ?? 'Melalui Aksi Kita, setiap laporan warga bisa ditangani lebih cepat dan tepat. Video ini menunjukkan bagaimana aplikasi membantu meningkatkan kualitas lingkungan kita.') ?>”
+            </p>
+        </section>
 
         <section class="about-us">
             <h2 class="section-title">Tim Kreator Aksi Kita</h2>
             <div class="team-cards-container">
 
-                <div class="team-member-card">
-                    <img src="ASSETS/vaidon.jpeg" alt="Foto Vaidon" class="profile-photo-real">
-                    <h3>Vaidon Shello Sinambela</h3>
-                    <p class="nim">NIM: 241712052</p>
-                    <p class="role">Laporan, Tentang, Informasi Penting</p>
-                </div>
-
-                <div class="team-member-card">
-                    <img src="ASSETS/alma.jpeg" alt="Foto Alma" class="profile-photo-real">
-                    <h3>Alma Murael Gultom</h3>
-                    <p class="nim">NIM: 241712049</p>
-                    <p class="role">Login, Register, Popup</p>
-                </div>
-
-                <div class="team-member-card">
-                    <img src="ASSETS/adelia2.JPG" alt="Foto Adelia" class="profile-photo-real">
-                    <h3>Adelia Deswita Simbolon</h3>
-                    <p class="nim">NIM: 241712066</p>
-                    <p class="role">Pop Up Seting dan Laporan</p>
-                </div>
-
-                <div class="team-member-card">
-                    <img src="ASSETS/fryana.jpeg" alt="Foto Fryana" class="profile-photo-real">
-                    <h3>Fryana Gultom</h3>
-                    <p class="nim">NIM: 241712054</p>
-                    <p class="role">Beranda1, Beranda2, Popup Profile</p>
-                </div>
-                
-                <div class="team-member-card">
-                    <img src="ASSETS/andri.jpeg" alt="Foto Andri" class="profile-photo-real">
-                    <h3>Andri Wiguna</h3>
-                    <p class="nim">NIM: 241712062</p>
-                    <p class="role">Peringkat, Laporan Populer, Statistik Laporan</p>
-                </div>
+                <?php 
+                if (mysqli_num_rows($tim) > 0):
+                    while($row = mysqli_fetch_assoc($tim)): 
+                ?>
+                    <div class="team-member-card">
+                        <img src="ASSETS/<?= htmlspecialchars($row['foto']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="profile-photo-real">
+                        <h3><?= htmlspecialchars($row['nama']) ?></h3>
+                        <p class="nim">NIM: <?= htmlspecialchars($row['nim']) ?></p>
+                        <p class="role"><?= htmlspecialchars($row['tugas']) ?></p>
+                    </div>
+                <?php 
+                    endwhile; 
+                else: 
+                ?>
+                    <div class="team-member-card">
+                        <img src="ASSETS/vaidon.jpeg" alt="Foto Vaidon" class="profile-photo-real">
+                        <h3>Vaidon Shello Sinambela</h3>
+                        <p class="nim">NIM: 241712052</p>
+                        <p class="role">Laporan, Tentang, Informasi Penting</p>
+                    </div>
+                <?php endif; ?>
                 
             </div>
         </section>
     </main>
 
-    
-
-
-<footer class="main-footer">
+    <footer class="main-footer">
         <div class="footer-top">
             <img src="ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
             <h3>Aksi Kita</h3>
@@ -508,7 +510,7 @@ body {
         </div>
       
         <div class="footer-bottom">
-            © 2025 AksiKita. Semua Hak Dilindungi.
+            © 2026 AksiKita. Semua Hak Dilindungi.
         </div>
     </footer>
 </body>

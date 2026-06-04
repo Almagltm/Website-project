@@ -26,21 +26,54 @@ body {
     color: white;
     display: flex;
     align-items: center;
-    padding: 13px 55px;
+    padding: 13px 50px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    gap: 50px;
+    flex-wrap: wrap;
 }
 
-.btn-outline {
-  transform: translate(400%, 0%);
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .hero-text h1 {
+    font-size: 32px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .showcase-wrapper {
+    flex-direction: column;
+  }
+
+  .zigzag-item,
+  .zigzag-item.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
 }
+
 
 .logo img {
   height: 55px;
+}
+
+.navlinks {
+  display: flex;
+  gap: 15px;
+  margin-left: 60px;
+  flex-wrap: wrap;
+  
 }
 
 .navlinks a {
@@ -59,8 +92,8 @@ body {
 /* Auth Buttons */
 .nav-auth {
   display: flex;
-  align-items: center;
-  transform: translate(90%, 0%);
+  margin-left: auto;
+  
   gap: 10px;
 }
 
@@ -87,7 +120,8 @@ body {
 
 .hero-img {
   width: 100%;
-  height: 600px;
+  min-height: 400px;
+  height: 80vh;
   object-fit: cover;
   border-radius: 0 0 130px 130px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.601);
@@ -103,9 +137,11 @@ body {
 }
 
 .hero-text h1 {
-  width: 600px;
-  font-size: 50px;
+  max-width: 600px;
+  width: 90%;
+  font-size: clamp(28px, 5vw, 50px);
   font-weight: 700;
+
 }
 
 .laporkan-btn {
@@ -149,7 +185,7 @@ body {
 }
 
 .about-section p {
-  font-size: 16px;
+  font-size: 20px;
   color: #444;
   max-width: 800px;
   margin: auto;
@@ -435,7 +471,7 @@ max-width: 90%;
     margin: auto auto;
     max-height: 100%;
     margin-bottom: -150px;
-    padding: 100px 150px;
+    padding: 80px 7%;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -524,31 +560,32 @@ max-width: 90%;
     }
 }
 
+.showcase-btn {
+  text-decoration: none;
+}
 
 </style>
 
 <body>
 
-  <!-- NAVBAR -->
   <header class="navbar">
     <div class="logo">
       <img src="ASSETS/LOGO.png" alt="Logo Aksi Kita">
     </div>
 
     <nav class="navlinks">
-      <a href="#" class="active">Beranda</a>
-      <a href="LAPORANsebelum.html">Laporan</a>
-      <a href="PERINGKATsebelum.html">Peringkat</a>
-      <a href="TENTANGsebelum.html">Tentang</a>
+      <a href="BERANDA1.php" class="active">Beranda</a>
+      <a href="LAPORANsebelum.php">Laporan</a>
+      <a href="PERINGKATsebelum.php">Peringkat</a>
+      <a href="TENTANGsebelum.php">Tentang</a>
     </nav>
     
     <div class="nav-auth">
-      <button onclick="window.location.href='DAFTAR.html'" class="btn-outline">Daftar</button>
-      <button onclick="window.location.href='MASUK.html'" class="btn-outline">Masuk</button>
+      <button onclick="window.location.href='USER/DAFTAR.php'" class="btn-outline">Daftar</button>
+      <button onclick="window.location.href='USER/MASUK.php'" class="btn-outline">Masuk</button>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <img src="ASSETS/Main Background.jpg" alt="Kerjasama" class="hero-img" />
 
@@ -562,8 +599,7 @@ max-width: 90%;
     </div>
   </section>
 
-  <!-- ABOUT SECTION -->
-<section class="about-section">
+  <section class="about-section">
   <div class="about-container">
     <h2>Apa Itu Aksi Kita?</h2>
     <p>
@@ -602,7 +638,6 @@ max-width: 90%;
 </section>
 
 
-  <!-- POPUP -->
   <div id="popup-overlay" class="popup-overlay">
     <div class="popup-box">
       <p>
@@ -611,9 +646,6 @@ max-width: 90%;
       </p>
     </div>
   </div>
-
-  <!-- ANOTHER DESCRIPTION -->
-
 
   <section class="showcase">
   <div class="showcase-wrapper">
@@ -627,11 +659,11 @@ max-width: 90%;
   </p>
 
   <p>
-    Setiap laporan diproses dengan sistem terintegrasi agar dapat ditindaklanjuti 
+    Every laporan diproses dengan sistem terintegrasi agar dapat ditindaklanjuti 
     oleh pihak yang berwenang, serta dapat dipantau oleh publik secara terbuka.
   </p>
 
-  <button class="showcase-btn">Pelajari Lebih Lanjut</button>
+  <a href="TENTANGsebelum.php" class="showcase-btn">Pelajari Lebih Lanjut</a>
 </div>
 
 <div class="showcase-image">
@@ -644,7 +676,6 @@ max-width: 90%;
 <section class="zigzag-section">
    <div class="zigzag-container">
     <h2>Mengapa Harus Memilih AksiKita?</h2>
-    <!-- ITEM 1 -->
     <div class="zigzag-item">
         <div class="zigzag-img">
             <i class="fa-solid fa-shield-halved"></i>
@@ -658,7 +689,6 @@ max-width: 90%;
         </div>
     </div>
 
-    <!-- ITEM 2 -->
     <div class="zigzag-item reverse">
         <div class="zigzag-img">
             <i class="fa-solid fa-bolt"></i>
@@ -671,7 +701,6 @@ max-width: 90%;
         </div>
     </div>
 
-    <!-- ITEM 3 -->
     <div class="zigzag-item">
         <div class="zigzag-img">
             <i class="fa-solid fa-chart-line"></i>
@@ -685,7 +714,6 @@ max-width: 90%;
         </div>
     </div>
 
-    <!-- ITEM 4 -->
     <div class="zigzag-item reverse">
         <div class="zigzag-img">
             <i class="fa-solid fa-people-group"></i>
@@ -708,14 +736,12 @@ max-width: 90%;
 
   <div class="footer-content">
 
-    <!-- Kiri -->
     <div class="footer-col">
       <p>Jl. Bachireng No. 12, Indonesia</p>
       <p>0821 6888 9060</p>
       <p>info@aksikita.id</p>
     </div>
 
-    <!-- Tengah -->
     <div class="footer-col">
       <a href="#">Unit Layanan Terpadu</a>
       <a href="#">Cara Kerja</a>
@@ -723,7 +749,6 @@ max-width: 90%;
       <a href="#">Aturan Penggunaan</a>
     </div>
 
-    <!-- Kanan -->
     <div class="footer-col">
       <a href="#">Lapor</a>
       <a href="#">Survei</a>
@@ -742,7 +767,7 @@ max-width: 90%;
   </div>
 
   <div class="footer-bottom">
-    © 2025 AksiKita. Semua Hak Dilindungi.
+    © 2026 AksiKita. Semua Hak Dilindungi.
   </div>
 </footer>
 

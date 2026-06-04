@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peringkat - Aksi Kita</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background:linear-gradient(#ffffff, #d2f6ff);
+}
+
+.laporan-page {
+    max-width: 950px;
+    margin: 120px auto 50px; 
+    padding: 0 20px;
+}
+
+.page-title {
+    display: none;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #1e3d8f;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 13px 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    flex-wrap: wrap;
+}
+
+.logo img {
+    height: 55px;
+}
+
+.navlinks {
+  display: flex;
+  gap: 15px;
+  margin-left: 60px;
+  flex-wrap: wrap;
+}
+
+.navlinks a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 5px 0;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.navlinks a.active {
+    text-decoration: underline;
+}
+
+.nav-auth {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-outline {
+  padding: 8px 30px;
+  border: 2px solid white;
+  border-radius: 30px;
+  background: transparent;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: #244a9a;
+}
+
+/* NOT FOUND */
+.notfound-container {
+    text-align: center;
+    padding: 100px 20px;
+    animation: fadeIn 0.8s ease;
+}
+
+.notfound-img {
+    width: 420px;
+    max-width: 80%;
+    margin: 0 auto 25px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.notfound-title {
+    font-size: 55px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #0d1c31, #1e3d8f);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.notfound-desc {
+    color: #666;
+    font-size: 20px;
+    margin-bottom: 35px;
+}
+
+.notfound-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.notfound-btn {
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    border: 2px solid #1e3d8f;
+    cursor: pointer;
+    background: white;
+    color: #1e3d8f;
+    transition: 0.3s;
+}
+
+.notfound-btn:hover {
+    background: #1e3d8f;
+    color: white;
+    transform: translateY(-3px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+}
+
+/* FOOTER */
+.main-footer {
+  background: linear-gradient(165deg, #080e18 0%, #102647 70%, #9c7719 120%);
+  color: #fff;
+  padding: 60px 70px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.footer-logo {
+  width: 75px;
+  height: 55px;
+  object-fit: cover;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 45px;
+  gap: 20px;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-col p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 15px;
+}
+
+.footer-col a {
+  display: block;
+  margin: 6px 0;
+  color: #eee;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.footer-col a:hover {
+  color: #0077ff;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  background: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.footer-social a:hover {
+  transform: translateY(-5px);
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 10px;
+}
+
+@media (max-width: 800px) {
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-top {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+</style>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="ASSETS/LOGO.png" alt="Logo Aksi Kita">
+        </div>
+
+        <nav class="navlinks">
+            <a href="BERANDA1.php">Beranda</a>
+            <a href="LAPORANsebelum.php">Laporan</a>
+            <a href="#" class="active">Peringkat</a>
+            <a href="TENTANGsebelum.php">Tentang</a>
+        </nav>
+        
+        <div class="nav-auth">
+        <button onclick="window.location.href='./USER/DAFTAR.php'" class="btn-outline">Daftar</button>
+        <button onclick="window.location.href='./login.php'" class="btn-outline">Masuk</button>
+      </div>
+    </header>
+
+    <main class="laporan-page">
+    <div class="notfound-container">
+        <img src="ASSETS/emptypage.svg" class="notfound-img" alt="Not Found">
+
+        <h1 class="notfound-title">Akun Anda Belum Terdaftarkan</h1>
+
+        <p class="notfound-desc">
+            Silakan masuk atau buat akun baru untuk mengakses fitur peringkat.
+        </p>
+
+        <div class="notfound-buttons">
+            <button class="notfound-btn" onclick="window.location.href='./login.php'">
+                Masuk
+            </button>
+            <button class="notfound-btn" onclick="window.location.href='./USER/DAFTAR.php'">
+                Daftar
+            </button>
+        </div>
+    </div>
+</main>
+
+    <footer class="main-footer">
+  <div class="footer-top">
+    <img src="ASSETS/LOGO.png" class="footer-logo" alt="AksiKita">
+    <h3>Aksi Kita</h3>
+  </div>
+
+  <div class="footer-content">
+
+    <!-- Kiri -->
+    <div class="footer-col">
+      <p>Jl. Bachireng No. 12, Indonesia</p>
+      <p>0821 6888 9060</p>
+      <p>info@aksikita.id</p>
+    </div>
+
+    <!-- Tengah -->
+    <div class="footer-col">
+      <a href="#">Unit Layanan Terpadu</a>
+      <a href="#">Cara Kerja</a>
+      <a href="#">FAQ</a>
+      <a href="#">Aturan Penggunaan</a>
+    </div>
+
+    <!-- Kanan -->
+    <div class="footer-col">
+      <a href="#">Lapor</a>
+      <a href="#">Survei</a>
+      <a href="#">Peta Situs</a>
+      <a href="#">Arsip</a>
+    </div>
+
+  </div>
+
+  <div class="footer-social">
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <a href="#"><i class="fab fa-facebook"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+    <a href="#"><i class="fab fa-tiktok"></i></a>
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 AksiKita. Semua Hak Dilindungi.
+  </div>
+</footer>
+
+</body>
+</html>
