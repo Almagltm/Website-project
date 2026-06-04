@@ -49,7 +49,7 @@ $stmt->bind_param(
 
         body {
             /* Background image with a slight dark overlay to make white text pop */
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('ASSETS/Main Background.jpg') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../ASSETS/Main Background.jpg') no-repeat center center/cover;
             height: 100vh;
             width: 100vw;
             display: flex;
