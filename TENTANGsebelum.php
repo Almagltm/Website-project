@@ -212,22 +212,24 @@ body {
 }
 
 .team-member-card {
-    background-color: white;
-    padding: 20px 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #ffffff, #f9fafb);
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03);
     display: flex;
     flex-direction: column; 
-    align-items: center; /* Pastikan semua isi rata tengah */
+    align-items: center; 
     width: 18%; 
-    min-width: 200px; /* Sedikit diperlebar agar teks tidak terlalu terhimpit */
+    min-width: 200px; 
     margin-bottom: 20px;
-    transition: transform 0.3s;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .team-member-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-color: #1e3d8f;
 }
 
 .profile-photo-real {
@@ -259,21 +261,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* KOTAK BIRU (ROLE) YANG DIPERBAIKI */
-.team-member-card .role {
-    font-size: 0.75em;
-    color: #000000;
-    background-color: #ADD8E6; 
-    padding: 10px; /* Padding sedikit ditambah */
-    border-radius: 5px;
-    width: 100%;          /* Lebar penuh */
-    margin-top: auto;     /* Dorong kotak ke paling bawah kartu */
-    min-height: 60px;     /* Paksa tinggi minimal agar semua kotak sama besar */
-    display: flex;
-    align-items: center;     /* Tengah vertikal */
-    justify-content: center; /* Tengah horizontal */
-    text-align: center;
-}
+
 
 
 /* ================== FOOTER ================== */
@@ -452,12 +440,15 @@ body {
                 <?php 
                 if (mysqli_num_rows($tim) > 0):
                     while($row = mysqli_fetch_assoc($tim)): 
+                        $nama_tampil = htmlspecialchars($row['nama']);
+                        if ($nama_tampil === 'Alma Murael Gultom') {
+                            $nama_tampil = 'Alma Murael<br>Gultom';
+                        }
                 ?>
                     <div class="team-member-card">
                         <img src="ASSETS/<?= htmlspecialchars($row['foto']) ?>" alt="Foto <?= htmlspecialchars($row['nama']) ?>" class="profile-photo-real">
-                        <h3><?= htmlspecialchars($row['nama']) ?></h3>
+                        <h3><?= $nama_tampil ?></h3>
                         <p class="nim">NIM: <?= htmlspecialchars($row['nim']) ?></p>
-                        <p class="role"><?= htmlspecialchars($row['tugas']) ?></p>
                     </div>
                 <?php 
                     endwhile; 
@@ -467,7 +458,6 @@ body {
                         <img src="ASSETS/vaidon.jpeg" alt="Foto Vaidon" class="profile-photo-real">
                         <h3>Vaidon Shello Sinambela</h3>
                         <p class="nim">NIM: 241712052</p>
-                        <p class="role">Laporan, Tentang, Informasi Penting</p>
                     </div>
                 <?php endif; ?>
                 
