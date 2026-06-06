@@ -288,22 +288,24 @@ body {
 }
 
 .team-member-card {
-    background-color: white;
-    padding: 20px 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(145deg, #ffffff, #f9fafb);
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03);
     display: flex;
     flex-direction: column; 
     align-items: center; 
     width: 18%; 
     min-width: 200px; 
     margin-bottom: 20px;
-    transition: transform 0.3s;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .team-member-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-color: #1e3d8f;
 }
 
 .profile-photo-real {
@@ -335,20 +337,7 @@ body {
     margin-bottom: 15px;
 }
 
-.team-member-card .role {
-    font-size: 0.75em;
-    color: #000000;
-    background-color: #ADD8E6; 
-    padding: 10px; 
-    border-radius: 5px;
-    width: 100%;          
-    margin-top: auto;     
-    min-height: 60px;     
-    display: flex;
-    align-items: center;     
-    justify-content: center; 
-    text-align: center;
-}
+
 
 /* FOOTER */
 .main-footer {
@@ -521,12 +510,16 @@ body {
             <h2 class="section-title">Tim Kreator Aksi Kita</h2>
             <div class="team-cards-container">
                 <?php if ($query_tim && mysqli_num_rows($query_tim) > 0): ?>
-                    <?php while($row_tim = mysqli_fetch_assoc($query_tim)): ?>
+                    <?php while($row_tim = mysqli_fetch_assoc($query_tim)): 
+                        $nama_tampil = htmlspecialchars($row_tim['nama']);
+                        if ($nama_tampil === 'Alma Murael Gultom') {
+                            $nama_tampil = 'Alma Murael<br>Gultom';
+                        }
+                    ?>
                         <div class="team-member-card">
                             <img src="../ASSETS/<?= $row_tim['foto'] ?>" alt="Foto <?= htmlspecialchars($row_tim['nama']) ?>" class="profile-photo-real">
-                            <h3><?= htmlspecialchars($row_tim['nama']) ?></h3>
+                            <h3><?= $nama_tampil ?></h3>
                             <p class="nim">NIM: <?= htmlspecialchars($row_tim['nim']) ?></p>
-                            <p class="role"><?= htmlspecialchars($row_tim['tugas']) ?></p>
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>
