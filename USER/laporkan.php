@@ -341,7 +341,12 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f4;min-height:100vh;}
         <div class="row-2">
           <div class="fg">
             <label for="tanggal"><i class="fa-solid fa-calendar-days"></i> Tanggal Kejadian *</label>
-            <input type="date" id="tanggal" name="tanggal" required value="<?= htmlspecialchars($_POST['tanggal'] ?? date('Y-m-d')) ?>"/>
+            <input type="date"
+       id="tanggal"
+       name="tanggal"
+       required
+       max="<?= date('Y-m-d') ?>"
+       value="<?= htmlspecialchars($_POST['tanggal'] ?? date('Y-m-d')) ?>" />
           </div>
           <div class="fg">
             <label for="instansi"><i class="fa-solid fa-building"></i> Instansi Tujuan</label>
